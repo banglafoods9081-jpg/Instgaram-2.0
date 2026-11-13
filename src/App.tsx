@@ -17,6 +17,7 @@ import { CreateModal } from './components/Create/CreateModal';
 import { SearchDrawer } from './components/Search/SearchDrawer';
 import { NotificationsDrawer } from './components/Notifications/NotificationsDrawer';
 import { SettingsModal } from './components/Settings/SettingsModal';
+import { OfflineIndicator } from './components/PWA/OfflineIndicator';
 
 const InstagramShell: React.FC = () => {
   const {
@@ -163,6 +164,7 @@ export default function App() {
   return (
     <InstagramProvider>
       <InstagramShell />
+      <OfflineIndicator />
     </InstagramProvider>
   );
 }

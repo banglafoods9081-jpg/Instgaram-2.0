@@ -15,6 +15,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { useInstagram } from '../../context/InstagramContext';
+import { PWAInstallButton } from '../PWA/PWAInstallButton';
 
 interface SidebarProps {
   onOpenSearch: () => void;
@@ -276,6 +277,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <ChevronRight className="w-4 h-4 text-neutral-400 shrink-0" />
             </button>
 
+            <PWAInstallButton variant="sidebar" theme={theme} />
+
             {/* More Menu Button */}
             <button
               onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)}
@@ -286,12 +289,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </button>
           </div>
         ) : (
-          <button
-            onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)}
-            className="w-full flex justify-center py-2 hover:bg-neutral-800/40 rounded-xl transition"
-          >
-            <Menu className="w-6 h-6" />
-          </button>
+          <div className="flex flex-col gap-1 items-center">
+            <PWAInstallButton variant="sidebar" collapsed theme={theme} />
+            <button
+              onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)}
+              className="w-full flex justify-center py-2 hover:bg-neutral-800/40 rounded-xl transition"
+            >
+              <Menu className="w-6 h-6" />
+            </button>
+          </div>
         )}
       </div>
     </aside>

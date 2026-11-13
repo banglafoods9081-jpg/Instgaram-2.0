@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Upload, CheckCircle2, Sparkles, ShieldCheck, ArrowRight, LogOut } from 'lucide-react';
 import { useInstagram } from '../../context/InstagramContext';
 import { compressImageToDataUrl } from '../../utils/mediaUtils';
+import { PWAInstallButton } from '../PWA/PWAInstallButton';
 
 const AVATAR_OPTIONS = [
   'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80',
@@ -346,6 +347,7 @@ export const AuthScreen: React.FC = () => {
               </>
             )}
           </div>
+          <PWAInstallButton variant="pill" />
         </div>
       </div>
     </div>

@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useInstagram } from '../../context/InstagramContext';
 import { compressImageToDataUrl } from '../../utils/mediaUtils';
+import { PWAInstallButton } from '../PWA/PWAInstallButton';
 
 export const SettingsModal: React.FC = () => {
   const {
@@ -292,6 +293,8 @@ export const SettingsModal: React.FC = () => {
                     Switch to {theme === 'dark' ? 'Light' : 'Dark'}
                   </button>
                 </div>
+
+                <PWAInstallButton variant="card" theme={theme} />
 
                 <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 flex items-start gap-3">
                   <Sparkles className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />

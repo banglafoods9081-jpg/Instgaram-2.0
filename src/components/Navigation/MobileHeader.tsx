@@ -1,6 +1,7 @@
 import React from 'react';
 import { Heart, MessageCircle, PlusSquare } from 'lucide-react';
 import { useInstagram } from '../../context/InstagramContext';
+import { PWAInstallButton } from '../PWA/PWAInstallButton';
 
 interface MobileHeaderProps {
   onOpenNotifications: () => void;
@@ -26,7 +27,9 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({ onOpenNotifications 
         </button>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
+        <PWAInstallButton variant="compact" theme={theme} />
+
         <button
           onClick={() => openCreateModal('post')}
           className="p-1 hover:opacity-70 transition"
