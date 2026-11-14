@@ -7,6 +7,7 @@ import {VitePWA} from 'vite-plugin-pwa';
 export default defineConfig(() =>
   base: '/Instgaram-2.0/',
   return {
+    base: './',
     plugins: [
       react(),
       tailwindcss(),
@@ -18,13 +19,13 @@ export default defineConfig(() =>
           type: 'module',
         },
         manifest: {
-          id: '/',
+          id: './',
           name: 'Instagram - Realtime Social Network',
           short_name: 'Instagram',
           description:
             'A full-featured real-time Instagram experience with Feed, Stories, Reels, Explore, Direct Messages, Profiles, and Live Updates.',
-          start_url: '/',
-          scope: '/',
+          start_url: './',
+          scope: './',
           display: 'standalone',
           orientation: 'portrait-primary',
           theme_color: '#000000',
@@ -54,6 +55,7 @@ export default defineConfig(() =>
         workbox: {
           maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
           globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+          navigateFallback: 'index.html',
           navigateFallbackDenylist: [/^\/__\/auth/, /^\/api/],
           runtimeCaching: [
             {

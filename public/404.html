@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Instagram - Redirecting</title>
+    <script>
+      (function () {
+        var pathParts = window.location.pathname.split('/').filter(Boolean);
+        var base = pathParts.length > 0 ? '/' + pathParts[0] + '/' : '/';
+        var hash = window.location.hash || '#/feed';
+        window.location.replace(window.location.origin + base + hash);
+      })();
+    </script>
+  </head>
+  <body style="background:#000;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;">
+    <p>Loading Instagram...</p>
+  </body>
+</html>

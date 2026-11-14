@@ -135,7 +135,59 @@ const FALLBACK_USER: User = {
   following: []
 };
 
+type AppTab = 'feed' | 'explore' | 'reels' | 'messages' | 'notifications' | 'profile';
+
+interface ParsedHashRoute {
+  tab: AppTab;
+  profileUserId: string | null;
+  chatUserId: string | null;
+}
+
+function parseHashRoute(hashStr: string): ParsedHashRoute {
+  const clean = hashStr.replace(/^#\/?/, '').trim();
+  if (!clean) {
+    return { tab: 'feed', profileUserId: null, chatUserId: null };
+  }
+  const [segment, param] = clean.split('/');
+  switch (segment) {
+    case 'explore':
+      return { tab: 'explore', profileUserId: null, chatUserId: null };
+    case 'reels':
+      return { tab: 'reels', profileUserId: null, chatUserId: null };
+    case 'messages':
+      return {
+        tab: 'messages',
+        profileUserId: null,
+        chatUserId: param ? decodeURIComponent(param) : null
+      };
+    case 'profile':
+      return {
+        tab: 'profile',
+        profileUserId: param ? decodeURIComponent(param) : null,
+        chatUserId: null
+      };
+    case 'feed':
+    default:
+      return { tab: 'feed', profileUserId: null, chatUserId: null };
+  }
+}
+
+function buildHashRoute(tab: AppTab, profileUserId: string | null, chatUserId: string | null): string {
+  if (tab === 'profile' && profileUserId) {
+    return `#/profile/${encodeURIComponent(profileUserId)}`;
+  }
+  if (tab === 'messages' && chatUserId) {
+    return `#/messages/${encodeURIComponent(chatUserId)}`;
+  }
+  return `#/${tab}`;
+}
+
 export const InstagramProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const initialRoute =
+    typeof window !== 'undefined'
+      ? parseHashRoute(window.location.hash)
+      : { tab: 'feed' as AppTab, profileUserId: null, chatUserId: null };
+
   const [authReady, setAuthReady] = useState(false);
   const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | null>(null);
   const [needsOnboarding, setNeedsOnboarding] = useState(false);
@@ -157,15 +209,15 @@ export const InstagramProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [storyViewsMap, setStoryViewsMap] = useState<Record<string, string[]>>({});
 
   const [rawConversations, setRawConversations] = useState<any[]>([]);
-  const [currentChatUserId, setCurrentChatUserId] = useState<string | null>(null);
+  const [currentChatUserId, setCurrentChatUserId] = useState<string | null>(initialRoute.chatUserId);
   const [chatMessages, setChatMessages] = useState<Message[]>([]);
   const [isChatUserTyping, setIsChatUserTyping] = useState<boolean>(false);
 
   const [rawNotifications, setRawNotifications] = useState<any[]>([]);
 
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
-  const [activeTab, setActiveTab] = useState<'feed' | 'explore' | 'reels' | 'messages' | 'notifications' | 'profile'>('feed');
-  const [viewProfileUserId, setViewProfileUserId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<AppTab>(initialRoute.tab);
+  const [viewProfileUserId, setViewProfileUserId] = useState<string | null>(initialRoute.profileUserId);
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [createModalType, setCreateModalType] = useState<'post' | 'reel' | 'story'>('post');
@@ -174,6 +226,26 @@ export const InstagramProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const typingTimerRef = useRef<any>(null);
+
+  // Sync Hash Router with browser back/forward and state changes
+  useEffect(() => {
+    const handleHashChange = () => {
+      const parsed = parseHashRoute(window.location.hash);
+      setActiveTab(parsed.tab);
+      setViewProfileUserId(parsed.profileUserId);
+      setCurrentChatUserId(parsed.chatUserId);
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const nextHash = buildHashRoute(activeTab, viewProfileUserId, currentChatUserId);
+    if (window.location.hash !== nextHash) {
+      window.location.hash = nextHash;
+    }
+  }, [activeTab, viewProfileUserId, currentChatUserId]);
 
   // ------------------------------------------------------------------
   // 1. Firebase Auth Listener
