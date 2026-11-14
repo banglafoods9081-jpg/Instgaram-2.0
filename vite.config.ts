@@ -4,7 +4,8 @@ import path from 'path';
 import {defineConfig} from 'vite';
 import {VitePWA} from 'vite-plugin-pwa';
 
-export default defineConfig(() => {
+export default defineConfig(() =>
+  base: '/Instgaram-2.0/',
   return {
     plugins: [
       react(),
